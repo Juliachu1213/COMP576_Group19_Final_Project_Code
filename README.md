@@ -32,12 +32,8 @@ Our workflow consists of three stages:
 2. **Stage 2 — Daily Sentiment Aggregation**
    Apply the classifier to daily news headlines (2008–2016) and compute a daily sentiment score aligned with next-day DJIA movement.
 
-3. **Stage 3 — Prediction Models (not included here)**
+3. **Stage 3 — Prediction Models**
    Train MLP / LSTM / GRU models using the aggregated sentiment time series to predict next-day DJIA direction.
-
-This repository provides the code for **Stage 1** and **Stage 2**.
-
----
 
 # ## 📁 **Files Included**
 
