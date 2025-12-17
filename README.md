@@ -1,139 +1,189 @@
-📈 Predicting Stock Market Movements Using Deep Learning-Based Sentiment Analysis of Financial News
+# 🌟 **Predicting Stock Market Movements Using Deep Learning-Based Sentiment Analysis of Financial News**
 
-Chu-Yun Chu · Kelly Hung · Vivian Liu · Thomas Lin
-COMP 576 · Deep Learning · Fall 2025
-
-🔍 Overview
-
-This repository contains the full implementation for our project exploring:
-
-Can deep-learning-based sentiment signals predict next-day DJIA movement?
-
-We build a three-stage pipeline:
-
-Stage 1 — FinBERT Fine-Tuning
-Train a financial-domain sentiment classifier using 4,000 labeled headlines.
-
-Stage 2 — Daily Sentiment Aggregation
-Apply FinBERT to 8 years of news headlines, compute daily sentiment features, and align them with next-day DJIA labels.
-
-Stage 3 — Market Movement Prediction (MLP/LSTM/GRU)
-Train sequence models on daily sentiment signals to predict Up/Down movement.
+**Chu-Yun Chu · Kelly Hung · Vivian Liu · Thomas Lin**
+COMP 576 — Deep Learning — Fall 2025
 
 ---
 
-## 🔹 **Project Overview**
+# 🔍 **Project Summary**
 
-Our workflow consists of three stages:
+This repository implements our full pipeline to answer the research question:
 
-1. **Stage 1 — Fine-tune FinBERT**
-   Train a sentiment classifier using ~4,000 labeled financial news headlines.
+## **Can deep-learning-based sentiment signals predict next-day DJIA movement?**
 
-2. **Stage 2 — Daily Sentiment Aggregation**
-   Apply the classifier to daily news headlines (2008–2016) and compute a daily sentiment score aligned with next-day DJIA movement.
-
-3. **Stage 3 — Prediction Models**
-   Train MLP / LSTM / GRU models using the aggregated sentiment time series to predict next-day DJIA direction.
-
-# ## 📁 **Files Included**
-
-### **`finbert_model.py` — Stage 1: Fine-tuning FinBERT**
-
-This script:
-
-* Downloads the *Sentiment Analysis for Financial News* dataset (Kaggle)
-* Preprocesses the headlines and labels
-* Fine-tunes FinBERT (`yiyanghkust/finbert-tone`)
-* Evaluates the model using accuracy, F1-score, and a confusion matrix
-* Saves the fine-tuned model and tokenizer to Google Drive
-
-**Output:**
-
-* `/finbert_model/` — directory containing model weights and tokenizer files
-* Confusion matrix printed to console
-* Training logs and evaluation metrics
-
----
-
-### **`daily_sentiment_aggregation.py` — Stage 2: Compute Daily Sentiment Score**
-
-This script:
-
-* Loads the fine-tuned FinBERT model from Stage 1
-* Downloads the DJIA news dataset (`Combined_News_DJIA.csv`)
-* Applies FinBERT to all 25 headlines per day
-* Aggregates predictions into a **daily sentiment score** (mean sentiment)
-* Aligns it with the *next-day* DJIA movement (Label column)
-* Outputs a CSV with sentiment score + label
-
-**Output:**
-
-* `daily_sentiment_scores.csv`
-  Contains: `Date, sentiment_score`
-* `news_label_daily_sentiment_scores.csv`
-  Contains: `Date, sentiment_score, Label`
-  → Used as Stage 3 model input
-
----
-
-# ## ▶️ **How to Run the Scripts**
-
-### **1. Install Dependencies**
+We build a 3-stage system combining NLP (FinBERT), sentiment aggregation, and sequence models (MLP / LSTM / GRU):
 
 ```
-pip install transformers datasets accelerate kagglehub
+Financial News → FinBERT Sentiment → Daily Sentiment Time Series → DJIA Prediction
 ```
 
 ---
 
-### **2. Run Stage 1 — Fine-tune FinBERT**
+# 🚀 **Project Pipeline**
+
+## **Stage 1 — FinBERT Fine-Tuning**
+
+Fine-tune a domain-specific financial sentiment model using ~4,000 labeled headlines.
+
+## **Stage 2 — Daily Sentiment Aggregation**
+
+Apply the classifier to 8 years of historical headlines and compute daily sentiment features aligned with next-day DJIA labels.
+
+## **Stage 3 — Market Movement Prediction (MLP / LSTM / GRU)**
+
+Train time-series models using daily sentiment sequences to predict whether the DJIA goes **Up (1)** or **Down (0)** the next day.
+
+---
+
+# 📁 **Repository Structure**
+
+```
+├── finbert_model.py                # Stage 1 — Fine-tuning FinBERT
+├── daily_sentiment_aggregation.py  # Stage 2 — Daily sentiment computation
+├── MLP_training.ipynb              # Stage 3 — MLP model training
+├── LSTM_training.ipynb             # Stage 3 — LSTM model training
+├── GRU_training.ipynb              # Stage 3 — GRU model training
+├── datasets/                       # (optional) processed CSV files
+└── README.md
+```
+
+---
+
+# 🧠 **Stage 1 — FinBERT Fine-Tuning (`finbert_model.py`)**
+
+This script:
+
+✔ Downloads Kaggle financial sentiment dataset
+✔ Preprocesses text + labels
+✔ Fine-tunes **FinBERT (`yiyanghkust/finbert-tone`)**
+✔ Evaluates with accuracy, F1-score, and confusion matrix
+✔ Saves model + tokenizer
+
+### **Outputs**
+
+* `finbert_model/` directory
+* Accuracy ≈ **0.85**
+* Weighted F1 ≈ **0.85**
+* Confusion matrix printed in console
+
+---
+
+# 📊 **Stage 2 — Daily Sentiment Aggregation (`daily_sentiment_aggregation.py`)**
+
+This script:
+
+✔ Loads fine-tuned FinBERT
+✔ Downloads **Combined_News_DJIA.csv**
+✔ Runs sentiment inference on all 25 daily headlines
+✔ Aggregates into a **daily sentiment score**
+✔ Aligns with next-day DJIA movement
+✔ Saves processed datasets
+
+### **Outputs**
+
+```
+daily_sentiment_scores.csv
+news_label_daily_sentiment_scores.csv   # used for Stage 3
+```
+
+---
+
+# 🤖 **Stage 3 — Market Movement Prediction (MLP / LSTM / GRU)**
+
+Training notebooks:
+
+* **`MLP_training.ipynb`** — baseline fully connected network
+* **`LSTM_training.ipynb`** — sequence model capturing temporal patterns
+* **`GRU_training.ipynb`** — gated recurrent model with efficient memory
+
+Each notebook:
+
+✔ Loads sentiment time-series from Stage 2
+✔ Constructs N-day sliding windows
+✔ Trains classification model
+✔ Plots training/validation curves
+✔ Reports accuracy & confusion matrix
+
+---
+
+# ▶️ **How to Run the Pipeline**
+
+## **1️⃣ Install dependencies**
+
+```
+pip install transformers datasets accelerate kagglehub pandas scikit-learn torch
+```
+
+---
+
+## **2️⃣ Run Stage 1 — Fine-tune FinBERT**
 
 ```
 python finbert_model.py
 ```
 
-This will:
-
-* Train FinBERT
-* Print accuracy, F1, and confusion matrix
-* Save the model in the specified directory (e.g., Google Drive)
-
 ---
 
-### **3. Run Stage 2 — Aggregate Daily Sentiment**
+## **3️⃣ Run Stage 2 — Aggregate Sentiment**
 
-After Stage 1 finishes, update the model path inside `daily_sentiment_aggregation.py`, then run:
+Make sure `model_path` points to the fine-tuned FinBERT directory:
 
 ```
 python daily_sentiment_aggregation.py
 ```
 
-This outputs sentiment scores in CSV format.
+---
 
-# ## 🔧 Dependencies
+## **4️⃣ Run Stage 3 — Train Prediction Models**
+
+Open any notebook:
+
+```
+MLP_training.ipynb
+LSTM_training.ipynb
+GRU_training.ipynb
+```
+
+Run all cells to reproduce model performance.
+
+---
+
+# 📦 **Dependencies**
 
 * Python 3.9+
 * PyTorch
-* transformers
+* HuggingFace Transformers
 * datasets
-* sklearn
+* accelerate
+* scikit-learn
 * pandas
 * kagglehub
 
 ---
 
-# ## 📚 Citation
+# 📚 **Datasets**
 
-Datasets used:
+### **Financial Sentiment Dataset**
 
-1. **Sentiment Analysis for Financial News**
-   Kaggle: [https://www.kaggle.com/datasets/ankurzing/sentiment-analysis-for-financial-news](https://www.kaggle.com/datasets/ankurzing/sentiment-analysis-for-financial-news)
+Kaggle — Sentiment Analysis for Financial News
+[https://www.kaggle.com/datasets/ankurzing/sentiment-analysis-for-financial-news](https://www.kaggle.com/datasets/ankurzing/sentiment-analysis-for-financial-news)
 
-2. **Combined News DJIA Dataset**
-   Kaggle: [https://www.kaggle.com/datasets/aaron7sun/stocknews](https://www.kaggle.com/datasets/aaron7sun/stocknews)
+### **Daily News + DJIA Dataset**
 
-Base model:
+Kaggle — Stock News and DJIA Movement
+[https://www.kaggle.com/datasets/aaron7sun/stocknews](https://www.kaggle.com/datasets/aaron7sun/stocknews)
 
-* **FinBERT** (yiyanghkust/finbert-tone)
+### **Base Pretrained Model**
+
+FinBERT (yiyanghkust/finbert-tone)
+
+---
+
+# 🙌 **Contributors**
+
+Chu-Yun Chu
+Kelly Hung
+Vivian Liu
+Thomas Lin
 
 
