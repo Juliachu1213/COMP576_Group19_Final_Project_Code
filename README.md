@@ -59,13 +59,6 @@ This script:
 ✔ Evaluates with accuracy, F1-score, and confusion matrix
 ✔ Saves model + tokenizer
 
-### **Outputs**
-
-* `finbert_model/` directory
-* Accuracy ≈ **0.85**
-* Weighted F1 ≈ **0.85**
-* Confusion matrix printed in console
-
 ---
 
 # 📊 **Stage 2 — Daily Sentiment Aggregation (`daily_sentiment_aggregation.py`)**
